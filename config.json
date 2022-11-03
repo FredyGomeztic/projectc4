@@ -1,0 +1,6 @@
+{
+  "url-backend": "127.0.0.1",
+  "port": 9999,
+  "db-connection": "mongodb+srv://proregistraduriac4:registraduria2022*@cluster0.aqi7jfp.mongodb.net/votaciones?retryWrites=true&w=majority",
+  "db-name": "votaciones"
+}
