@@ -48,23 +48,65 @@ def getByIdMesa(id):
     return jsonify(json)
 
 
-# ************** Candidatos ************************
+
+# *****************  Partidos ***************************************************************
+# MS Partidos Get all
+@app.route("/partido", methods=['GET'])
+def getPartidos():
+    print("listado de todos los partidos")
+    json = controladorPartido.index()
+    return jsonify(json)
+
+
+# MS Partidos Get one
+@app.route("/partido/<string:id>", methods=['GET'])
+def getPartido(id):
+    json = controladorPartido.show(id)
+    return jsonify(json)
+
+
+# MS Partidos Create
+@app.route("/partido/", methods=['POST'])
+def createPartido():
+    print("listado de todos los partidos")
+    datos = request.get_json()
+    json = controladorPartido.create(datos)
+    return jsonify(json)
+
+
+# MS Partidos Update
+@app.route("/partido/<string:id>", methods=['PUT'])
+def updatePartido(id):
+    datos = request.get_json()
+    json = controladorPartido.update(id, datos)
+    return jsonify(json)
+
+
+# MS Partidos Delete
+@app.route("/partido/<string:id>", methods=['DELETE'])
+def deletePartido(id):
+    json = controladorPartido.delete(id)
+    return jsonify(json)
+
+
+
+# ************** Candidatos *************************************************************
 # MS Candidatos Get all
-@app.route("/candidatos/", methods=['GET'])
+@app.route("/candidato", methods=['GET'])
 def getCandidatos():
     json = controladorCandidato.index()
     return jsonify(json)
 
 
 # MS Candidatos Get one
-@app.route("/candidatos/<string:id>", methods=['GET'])
+@app.route("/candidato/<string:id>", methods=['GET'])
 def getCandidato(id):
     json = controladorCandidato.show(id)
     return jsonify(json)
 
 
 # MS Candidatos Create
-@app.route("/candidatos/", methods=['POST'])
+@app.route("/candidato", methods=['POST'])
 def postCandidato():
     datos = request.get_json()
     json = controladorCandidato.create(datos)
@@ -72,7 +114,7 @@ def postCandidato():
 
 
 # MS Candidato Update
-@app.route("/candidatos/<string:id>", methods=['PUT'])
+@app.route("/candidato/<string:id>", methods=['PUT'])
 def updateCandidato(id):
     datos = request.get_json()
     json = controladorCandidato.update(id, datos)
@@ -80,15 +122,15 @@ def updateCandidato(id):
 
 
 # MS Candidato Delete
-@app.route("/candidatos/<string:id>", methods=['DELETE'])
+@app.route("/candidato/<string:id>", methods=['DELETE'])
 def deleteCandidato(id):
     json = controladorCandidato.delete(id)
     return jsonify(json)
 
 
-# *****************  Resultados *************************
+# *****************  Resultados ************************************************************
 # MS Resultados Get all
-@app.route("/resultados/", methods=['GET'])
+@app.route("/resultado/", methods=['GET'])
 def getResultados():
     json = controladorResultado.index()
     return jsonify(json)
@@ -102,7 +144,7 @@ def getResultado(id):
 
 
 # MS Resultados Create
-@app.route("/resultados/", methods=['POST'])
+@app.route("/resultado/", methods=['POST'])
 def postResultado():
     datos = request.get_json()
     json = controladorResultado.create(datos)
@@ -110,7 +152,7 @@ def postResultado():
 
 
 # MS Resultados Update
-@app.route("/resultados/<string:id>", methods=['PUT'])
+@app.route("/resultado/<string:id>", methods=['PUT'])
 def updateResultado(id):
     datos = request.get_json()
     json = controladorResultado.update(id, datos)
@@ -118,53 +160,14 @@ def updateResultado(id):
 
 
 # MS Resultados Delete
-@app.route("/resultados/<string:id>", methods=['DELETE'])
+@app.route("/resultado/<string:id>", methods=['DELETE'])
 def deleteResultado(id):
     json = controladorResultado.delete(id)
     return jsonify(json)
 
 
-# *****************  Partidos *************************
-# MS Partidos Get all
-@app.route("/partidos/", methods=['GET'])
-def getPartidos():
-    print("listado de todos los partidos")
-    json = controladorPartido.index()
-    return jsonify(json)
-
-
-# MS Partidos Get one
-@app.route("/partidos/<string:id>", methods=['GET'])
-def getPartido(id):
-    json = controladorPartido.show(id)
-    return jsonify(json)
-
-
-# MS Partidos Create
-@app.route("/partidos/", methods=['POST'])
-def createPartido():
-    print("listado de todos los partidos")
-    datos = request.get_json()
-    json = controladorPartido.create(datos)
-    return jsonify(json)
-
-
-# MS Partidos Update
-@app.route("/partidos/<string:id>", methods=['PUT'])
-def updatePartido(id):
-    datos = request.get_json()
-    json = controladorPartido.update(id, datos)
-    return jsonify(json)
-
-
-# MS Partidos Delete
-@app.route("/partidos/<string:id>", methods=['DELETE'])
-def deletePartido(id):
-    json = controladorPartido.delete(id)
-    return jsonify(json)
-
 #************** Asigna Candidato a Partido ***************
-@app.route("/partidos/<string:id_partido>/candidato/<string:id_candidato>",methods=['PUT'])
+@app.route("/partido/<string:id_partido>/candidato/<string:id_candidato>",methods=['PUT'])
 def asignaCandidatoPartido(id_candidato, id_partido):
     json = controladorCandidato.asignarPartido(id_candidato, id_partido)
     return jsonify(json)

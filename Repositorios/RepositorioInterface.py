@@ -75,12 +75,12 @@ class RepositorioInterface(Generic[T]):
         item = item.__dict__
         updateItem = {"$set": item}
         x = laColeccion.update_one({"_id": _id}, updateItem)
-        return {"msg": f'Actualización exitosa de la mesa {x.matched_count}'}
+        return {"msg": f'Actualización exitosa  {x.matched_count}'}
 
     def delete(self, id):
         laColeccion = self.baseDatos[self.coleccion]
         cuenta = laColeccion.delete_one({"_id": ObjectId(id)}).deleted_count
-        return {"msg": f'Eliminación exitosa de la mesa {id}' }
+        return {"msg": f'Eliminación exitosa {id}' }
 
     def query(self, theQuery):
         laColeccion = self.baseDatos[self.coleccion]
