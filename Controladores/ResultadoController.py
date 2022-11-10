@@ -1,38 +1,115 @@
 from Modelos.Resultado import Resultado
+from Modelos.Candidato import Candidato
+from Modelos.Mesa import Mesa
 from Repositorios.ResultadoRepositorio import ResultadoRepositorio
+from Repositorios.CandidatoRepositorio import CandidatoRepositorio
+from Repositorios.MesaRepositorio import MesaRepository
 
 class ResultadoController():
     def __init__(self):
         print("ResultadoController")
         self.resultadoRepositorio = ResultadoRepositorio()
+        self.candidatoRepositorio = CandidatoRepositorio()
+        self.mesaRepositorio = MesaRepository()
 
     # Metodo que lista los resultados
     def index(self):
-        print("Listado Resultados")
-        return self.resultadoRepositorio.findAll()
+        response = {}
+        try:
+            print("Listado Resultados")
+            res = self.resultadoRepositorio.findAll()
+            response = {
+                "length": len(res),
+                "msg": "Sin resultados" if len(res) == 0 else "1 resultado" if len(res) == 1 else str(
+                    len(res)) + " resultados",
+                "result": res
+            }
+        except:
+            response = {
+                "err": "Error al consultar",
+                "result": []
+            }
+        return response
 
     # Metodo que consultar un resultado
     def show(self, id):
-        print("Consultando resultado ", id)
-        result = Resultado(self.resultadoRepositorio.findById(id))
-        return result.__dict__
+        response = {}
+        try:
+            print("Consultando resultado ", id)
+            res = Resultado(self.resultadoRepositorio.findById(id))
+            response = {
+                "msg": "1 resultado",
+                "result": res.__dict__
+            }
+        except:
+            response = {
+                "err": "Error al consultar",
+                "msg": "Sin resultados",
+                "result": {}
+            }
+        return response
 
     # Metodo que crea un resultado
-    def create(self, aResult):
-        print("Creando un resultado")
-        result = Resultado(aResult)
-        return self.resultadoRepositorio.save(result)
+    def create(self, resultado):
+        response = {}
+        try:
+            print("Creando un resultado")
+            result = Resultado(resultado)
+            if "candidato" in resultado:
+                result.candidato = Candidato(self.candidatoRepositorio.findById(resultado["candidato"]))
+            if "mesa" in resultado:
+                result.mesa = Mesa(self.mesaRepositorio.findById(resultado["mesa"]))
+            res = self.resultadoRepositorio.save(result)
+            response = {
+                "msg": "Registro exitoso",
+                "result": True
+            }
+        except:
+            response = {
+                "err": "Error al registrar",
+                "msg": "Ocurrió un error, verifique los datos",
+                "result": False
+            }
+        return response
 
     # Metodo que actualiza un resultado
     def update(self, id, resultado):
-        print("Actualizando resultado ", id)
-        result = Resultado(self.resultadoRepositorio.findById(id))
-        result.mesa = resultado["mesa"]
-        result.candidato = resultado["candidato"]
-        result.cantidad_votos = resultado["cantidad_votos"]
-        return self.resultadoRepositorio.save(result)
+        response = {}
+        try:
+            print("Actualizando resultado ", id)
+            result = Resultado(self.resultadoRepositorio.findById(id))
+            result.cantidad_votos = resultado["cantidad_votos"]
+            if "mesa" in resultado:
+                result.mesa =Mesa(self.mesaRepositorio.findById(resultado["mesa"]))
+            if "candidato" in resultado:
+                result.candidato = Candidato(self.candidatoRepositorio.findById(resultado["candidato"]))
+            res = self.resultadoRepositorio.save(result)
+            response = {
+                "msg": "Actualización exitosa",
+                "result": True
+            }
+        except:
+            response = {
+                "err": "Error al actualizar",
+                "msg": "Ocurrió un error, verifique los datos",
+                "result": False
+            }
+        return response
 
     # Metodo que elimina un resultado
     def delete(self, id):
-        print("Resultado ", id, " eliminado")
-        return self.resultadoRepositorio.delete(id)
+        response = {}
+        try:
+            print("Resultado ", id, " eliminado")
+            res = self.resultadoRepositorio.delete(id)
+            response = {
+                "msg": "Registro eliminado",
+                "result": True
+            }
+        except:
+            response = {
+                "err": "Error al eliminar",
+                "msg": "Ocurrió un error, verifique los datos",
+                "result": False
+            }
+        return response

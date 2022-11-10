@@ -49,38 +49,49 @@ class RepositorioInterface(Generic[T]):
         return x
 
     def save(self, item: T):
-        laColeccion = self.baseDatos[self.coleccion]
-        elId = ""
-        item = self.transformRefs(item)
-        if hasattr(item, "_id") and item._id != "":
-            elId = item._id
-            _id = ObjectId(elId)
+        try:
+            laColeccion = self.baseDatos[self.coleccion]
+            elId = ""
+            item = self.transformRefs(item)
+            if hasattr(item, "_id") and item._id != "":
+                elId = item._id
+                _id = ObjectId(elId)
+                laColeccion = self.baseDatos[self.coleccion]
+                delattr(item, "_id")
+                item = item.__dict__
+                updateItem = {"$set": item}
+                x = laColeccion.update_one({"_id": _id}, updateItem)
+            else:
+                _id = laColeccion.insert_one(item.__dict__)
+                elId = _id.inserted_id.__str__()
+
+            x = laColeccion.find_one({"_id": ObjectId(elId)})
+            x["_id"] = x["_id"].__str__()
+            return True
+        except:
+            print(f'Excepción en save')
+            return False
+
+
+    def update(self, id, item: T):
+        try:
+            _id = ObjectId(id)
             laColeccion = self.baseDatos[self.coleccion]
             delattr(item, "_id")
             item = item.__dict__
             updateItem = {"$set": item}
             x = laColeccion.update_one({"_id": _id}, updateItem)
-        else:
-            _id = laColeccion.insert_one(item.__dict__)
-            elId = _id.inserted_id.__str__()
-
-        x = laColeccion.find_one({"_id": ObjectId(elId)})
-        x["_id"] = x["_id"].__str__()
-        return self.findById(elId)
-
-    def update(self, id, item: T):
-        _id = ObjectId(id)
-        laColeccion = self.baseDatos[self.coleccion]
-        delattr(item, "_id")
-        item = item.__dict__
-        updateItem = {"$set": item}
-        x = laColeccion.update_one({"_id": _id}, updateItem)
-        return {"msg": f'Actualización exitosa  {x.matched_count}'}
+            return True
+        except:
+            return False
 
     def delete(self, id):
-        laColeccion = self.baseDatos[self.coleccion]
-        cuenta = laColeccion.delete_one({"_id": ObjectId(id)}).deleted_count
-        return {"msg": f'Eliminación exitosa {id}' }
+        try:
+            laColeccion = self.baseDatos[self.coleccion]
+            cuenta = laColeccion.delete_one({"_id": ObjectId(id)}).deleted_count
+            return True
+        except:
+            return False
 
     def query(self, theQuery):
         laColeccion = self.baseDatos[self.coleccion]

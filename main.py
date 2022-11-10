@@ -166,13 +166,6 @@ def deleteResultado(id):
     return jsonify(json)
 
 
-#************** Asigna Candidato a Partido ***************
-@app.route("/partido/<string:id_partido>/candidato/<string:id_candidato>",methods=['PUT'])
-def asignaCandidatoPartido(id_candidato, id_partido):
-    json = controladorCandidato.asignarPartido(id_candidato, id_partido)
-    return jsonify(json)
-
-
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.

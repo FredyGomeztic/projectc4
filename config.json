@@ -1,6 +1,6 @@
 {
   "url-backend": "127.0.0.1",
-  "port": 9999,
+  "port": 5000,
   "db-connection": "mongodb+srv://weizmanfabian:elmejorequipo@cluster0.fvfzcgo.mongodb.net/academia?retryWrites=true&w=majority",
   "db-name": "academia"
 }
