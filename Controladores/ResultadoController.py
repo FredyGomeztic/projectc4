@@ -113,3 +113,21 @@ class ResultadoController():
                 "result": False
             }
         return response
+
+    def totalVotosPorMesa(self, id_mesa):
+        response = {}
+        try:
+            print("totalVotosPorMesa ", id_mesa, " consultando")
+            res = self.resultadoRepositorio.getTotalVotosPorMesa(id_mesa)
+            response = {
+                "msg": "Sin resultados" if len(res) == 0 else "1 resultado" if len(res) == 1 else str(len(res)) + " resultados",
+                "result": res if id_mesa == 0 else res[0]
+            }
+            if id_mesa == 0:
+                response.update({"length": len(res)})
+        except:
+            response = {
+                "err": "Ocurrió un error en la consulta",
+                "result": False
+            }
+        return response

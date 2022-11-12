@@ -144,7 +144,7 @@ def getResultado(id):
 
 
 # MS Resultados Create
-@app.route("/resultado/", methods=['POST'])
+@app.route("/resultado", methods=['POST'])
 def postResultado():
     datos = request.get_json()
     json = controladorResultado.create(datos)
@@ -163,6 +163,16 @@ def updateResultado(id):
 @app.route("/resultado/<string:id>", methods=['DELETE'])
 def deleteResultado(id):
     json = controladorResultado.delete(id)
+    return jsonify(json)
+
+@app.route("/resultado/get_total_votos_mesa", methods=['GET'])
+def getTotalVotosMesa():
+    json = controladorResultado.totalVotosPorMesa(0)
+    return jsonify(json)
+
+@app.route("/resultado/get_total_votos_mesa/<string:id>", methods=['GET'])
+def getTotalVotosMesaPorId(id):
+    json = controladorResultado.totalVotosPorMesa(id)
     return jsonify(json)
 
 
