@@ -19,7 +19,7 @@ class ResultadoRepositorio(RepositorioInterface[Resultado]):
             }
         }
         consulta3 = {
-            "$sort": {"total": -1}
+            "$sort": {"total": 1}
         }
         pipeline = [consulta1, consulta3] if id_mesa == 0 else [consulta, consulta1, consulta3]
         result = self.queryAggregation(pipeline)
@@ -37,3 +37,37 @@ class ResultadoRepositorio(RepositorioInterface[Resultado]):
             })
         return response
 #https://hispabigdata.blogspot.com/2013/12/como-ordenar-documentos-por-la-suma-de.html
+
+    def getTotalVotosCandidatoPorMesa(self, id_mesa):
+        print('getTotalVotosCandidatoPorMesa')
+        consulta = {}
+        if id_mesa != 0:
+            consulta = {
+                "$match": {"mesa.$id": ObjectId(id_mesa)}
+            }
+        consulta1 = {
+            "$group": {
+                "_id": "$candidato",
+                "total": {
+                    "$sum": "$cantidad_votos"
+                },
+                "doc": {"$first": "$$ROOT"}
+            }
+        }
+
+        consulta3 = {
+            "$sort": {"total": 1}
+        }
+        pipeline = [consulta1, consulta3] if id_mesa == 0 else [consulta, consulta1, consulta3]
+        result = self.queryAggregation(pipeline)
+        response = []
+        for n in result:
+            total = n.get("total")
+            obj = n.get("doc")
+            candidato = obj.get("candidato")
+            mesa = obj.get("mesa")
+            response.append({
+                "candidato": candidato,
+                "total": total
+            })
+        return response

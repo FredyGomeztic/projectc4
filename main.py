@@ -88,8 +88,6 @@ def deletePartido(id):
     json = controladorPartido.delete(id)
     return jsonify(json)
 
-
-
 # ************** Candidatos *************************************************************
 # MS Candidatos Get all
 @app.route("/candidato", methods=['GET'])
@@ -173,6 +171,16 @@ def getTotalVotosMesa():
 @app.route("/resultado/get_total_votos_mesa/<string:id>", methods=['GET'])
 def getTotalVotosMesaPorId(id):
     json = controladorResultado.totalVotosPorMesa(id)
+    return jsonify(json)
+
+@app.route("/resultado/get_total_votos_por_candidato", methods=['GET'])
+def getTotalVotosMesaDePartido():
+    json = controladorResultado.totalVotosCandidatoPorMesa(0)
+    return jsonify(json)
+
+@app.route("/resultado/get_total_votos_por_candidato/<string:id>", methods=['GET'])
+def getTotalVotosMesaDePartidoPorId(id):
+    json = controladorResultado.totalVotosCandidatoPorMesa(id)
     return jsonify(json)
 
 
